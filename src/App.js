@@ -88,13 +88,14 @@ class App extends React.Component {
 
      return (
         <div>
-          <p>Input:</p><p>{inputText}</p>
+          <h2>Input:</h2><p>{inputText}</p>
+          <h2>Words To Find</h2>
           <form onSubmit={this.handleSearch}>
             <AddInputForm words={this.state.words} handleChange={this.handleChange.bind(this)}/>
-            <input type='button' value='Add word' onClick={this.addClick.bind(this)}/>
+            <input type='button' value='Add New Word' onClick={this.addClick.bind(this)}/>
             <input type="submit" value="Search" />
           </form>
-          <p>Output:</p><p>{ReactHtmlParser(outputText)}</p>
+          <h2>Output:</h2><p>{ReactHtmlParser(outputText)}</p>
         </div>
     );
   }
