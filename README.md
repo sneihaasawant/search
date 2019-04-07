@@ -33,6 +33,8 @@ Languages : JavaScript
 
 5. It will open application on *http://localhost:3000/*
 
+Extra: At any point if **node** error received, install latest node fromm https://nodejs.org/en/download/
+
 ## Features : 
 
 1. Add Words : User should able to add words on *Add a word* button click
