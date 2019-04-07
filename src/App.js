@@ -92,8 +92,8 @@ class App extends React.Component {
           <h2>Words To Find</h2>
           <form onSubmit={this.handleSearch}>
             <AddInputForm words={this.state.words} handleChange={this.handleChange.bind(this)}/>
-            <input type='button' value='Add New Word' onClick={this.addClick.bind(this)}/>
-            <input type="submit" value="Search" />
+            <input className="appButton" type='button' value='Add New Word' onClick={this.addClick.bind(this)}/>
+            <input className="appButton" type="submit" value="Search" />
           </form>
           <h2>Output:</h2><p>{ReactHtmlParser(outputText)}</p>
         </div>
@@ -111,7 +111,7 @@ export const AddInputForm = ({ words, handleChange }) => {
   return (
       words.map((value, index) => (
           <div key={index}>
-            <input placeholder="Enter a Word" name="word" value={value.addedWord} onChange={handleChange.bind(this, index)} required/>
+            <input className="appInput" placeholder="Enter a Word" name="word" value={value.addedWord} onChange={handleChange.bind(this, index)} required/>
           </div>
       ))
   )
