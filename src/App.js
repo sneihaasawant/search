@@ -7,10 +7,13 @@ class App extends React.Component {
     super(props);
     this.state = {
       words: [],
-      inputText : "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+      inputText : "",
       outputText: ""
     };
     this.handleSearch = this.handleSearch.bind(this);
+    Array.prototype.compare = function (array){
+      return JSON.stringify(this) === JSON.stringify(array)
+    };
   }
   
   /*
@@ -28,11 +31,17 @@ class App extends React.Component {
   handleChange(i, e) {
     const { words } = this.state;
     let addedWord = e.target.value;
-    words[i] = {
-      ...words[i],
-      addedWord};
+    words[i] = addedWord;
     this.setState({words});
   }
+  /*
+* Taking input from text box as user .enters data.
+*/
+  handleTextChange(e) {
+    this.setState({inputText : e.target.value});
+  }
+  
+  
   
   /*
   * This function searches words ar per input given by user
@@ -40,42 +49,18 @@ class App extends React.Component {
   handleSearch(event) {
     const { inputText, words } = this.state;
     let textToMatch = inputText.split(" ");
-    let searchedWordsArray = [];
-
-    words.map((word) => {searchedWordsArray.push(word.addedWord.toLowerCase()); return null});
-
-  // looping though list of searched words
-    for (let i=0; i<= searchedWordsArray.length-1 ; i++){
-      // looping though given input text/paragraph
-      for (let j=0;  j<= textToMatch.length-1; j++ ){
-        // Check weather the user provided a single string or list of strings
-        if(searchedWordsArray[i].split(" ").length === 1 ){
-          // Converting string to lowercase and removing punctuations
-          // Check if match found for searched word
-          if(searchedWordsArray[i] === textToMatch[j].toLowerCase() || searchedWordsArray[i] === textToMatch[j].toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"")){
-            // If both words are identical , replace all the words with bold element
-            textToMatch[j] =  `<Strong>${textToMatch[j]}</Strong>`
-          }
-        }else {
-          // If user searched for group of strings , adding it to parkArray
+    
+    let searchedWordsArray = words.map((word) => word.toLowerCase());
+    
+    for (let i=0; i <= searchedWordsArray.length-1; i++){
+      for (let j=0;  j <= textToMatch.length-1; j++ ){
           let parkArray = searchedWordsArray[i].split(" ");
-          // Slicing original input array from searched word till its length
           let subInputTextArray = textToMatch.slice(j, j+parkArray.length);
-          // Converting string to lowercase and removing punctuations in subInputTextArray
-          for(let m=0;m<=subInputTextArray.length-1 ; m++){
-            subInputTextArray[m] = subInputTextArray[m].replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
-            subInputTextArray[m] = subInputTextArray[m].toLowerCase();
-          }
-          // check if both array are identical
-          if(JSON.stringify(parkArray) === JSON.stringify(subInputTextArray)){
-            // If both arrays are identical , replace all the words with bold element
-            for(let k=0; k <=parkArray.length-1 ; k++){
-              if(parkArray[k] === textToMatch[j+k].toLowerCase() || parkArray[k] === textToMatch[j+k].toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"") ){
-                textToMatch[j+k] =  `<Strong>${textToMatch[j+k]}</Strong>`
-              }
+          if(parkArray.compare(subInputTextArray)){
+            for (let k=0; k <=parkArray.length-1 ; k++){
+                textToMatch[j+k] = `<Strong>${textToMatch[j+k]}</Strong>`
             }
           }
-      }
     }
     this.setState({outputText: textToMatch.join(' ')})
   }
@@ -89,9 +74,10 @@ class App extends React.Component {
      return (
         <div>
           <h2>Input:</h2><p>{inputText}</p>
+          < AddInputTextForm inputTextValue={this.state.inputText} khivi={this.handleTextChange.bind(this)}/>
           <h2>Words To Find</h2>
           <form onSubmit={this.handleSearch}>
-            <AddInputForm words={this.state.words} handleChange={this.handleChange.bind(this)}/>
+            <AddInputForm words={this.state.words} khivi={this.handleChange.bind(this)} />
             <input className="appButton" type='button' value='Add New Word' onClick={this.addClick.bind(this)}/>
             <input className="appButton" type="submit" value="Search" />
           </form>
@@ -107,12 +93,16 @@ export default App;
 * This form provides Text Input element
 */
 
-export const AddInputForm = ({ words, handleChange }) => {
+export const AddInputForm = ({ words, khivi }) => {
   return (
       words.map((value, index) => (
           <div key={index}>
-            <input className="appInput" placeholder="Enter a Word" name="word" value={value.addedWord} onChange={handleChange.bind(this, index)} required/>
+            <input className="appInput" placeholder="Enter a Word" name="word" value={value} onChange={khivi.bind(this, index)} required/>
           </div>
       ))
   )
+};
+
+export const AddInputTextForm = ({ inputTextValue , khivi}) => {
+  return  <input className="appInput" placeholder="Enter a text" name="textinput" value={inputTextValue} onChange={khivi.bind(this)} required/>
 };
